@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "760053968845",
+    "project_id": "para-ya-8d158",
+    "storage_bucket": "para-ya-8d158.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:760053968845:android:fa978a0d662873eb281e84",
+        "android_client_info": {
+          "package_name": "com.example.para_ya"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAE2GFC9d4bHZ9hwEjwetC9os-vHA-cL0A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
