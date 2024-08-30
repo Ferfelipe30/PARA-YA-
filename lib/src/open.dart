@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:para_ya/src/Empresa/homeEmpresa.dart';
 import 'package:para_ya/src/Empresa/inicioSeccionEmpresa.dart';
 import 'package:para_ya/src/inicioSeccion.dart';
 
@@ -41,7 +42,6 @@ class openPage extends State<open> {
                           height: 50,
                         ),
                         bottonGoogleSeccion(),
-                        bottonFacebookSeccion(),
                         SizedBox(
                           height: 10,
                         ),
@@ -83,39 +83,22 @@ class bottonGoogleSeccion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: ElevatedButton.icon(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color.fromRGBO(255, 243, 13, 1),
-          foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-        ),
-        onPressed: () {},
-        icon: const FaIcon(FontAwesomeIcons.google),
-        label: const Text(
-          "Iniciar Sesión con Google",
-          style: TextStyle(fontSize: 20),
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: camel_case_types
-class bottonFacebookSeccion extends StatelessWidget {
-  const bottonFacebookSeccion({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton.icon(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color.fromRGBO(255, 243, 13, 1),
-          foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-        ),
-        onPressed: () {},
-        icon: const FaIcon(FontAwesomeIcons.facebook),
-        label: const Text(
-          "Iniciar Sesión con Facebook",
-          style: TextStyle(fontSize: 20),
+      child: Hero(
+        tag: 'unique-tag-for-this-hero',
+        child: ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromRGBO(255, 243, 13, 1),
+            foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+          ),
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const homeEmpresa()));
+          },
+          icon: const FaIcon(FontAwesomeIcons.google),
+          label: const Text(
+            "Iniciar Sesión con Google",
+            style: TextStyle(fontSize: 20),
+          ),
         ),
       ),
     );
@@ -135,6 +118,29 @@ class botonesIniciarSecciones extends StatelessWidget {
           Column(
             children: <Widget>[
               FloatingActionButton(
+                heroTag: 'unique-tag-for-this-fab',
+                backgroundColor: const Color.fromRGBO(255, 243, 13, 1),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const homeEmpresa()));
+                },
+                child: const Icon(
+                  Icons.facebook,
+                  size: 50,
+                  color: Colors.black,
+                ),
+              )
+            ],
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          Column(
+            children: <Widget>[
+              FloatingActionButton(
+                heroTag: 'unique-tag-for-this-fab',
                 backgroundColor: const Color.fromRGBO(255, 243, 13, 1),
                 onPressed: () {
                   Navigator.push(
@@ -155,6 +161,7 @@ class botonesIniciarSecciones extends StatelessWidget {
           ),
           Column(children: <Widget>[
             FloatingActionButton(
+              heroTag: 'unique-tag-for-this-fab',
               backgroundColor: const Color.fromRGBO(255, 243, 13, 1),
               onPressed: () {
                 Navigator.push(
