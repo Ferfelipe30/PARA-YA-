@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:para_ya/src/Empresa/homeEmpresa.dart';
 import 'package:para_ya/src/Empresa/inicioSeccionEmpresa.dart';
+import 'package:para_ya/src/autenticadorGoogle.dart';
+import 'package:para_ya/src/home.dart';
 import 'package:para_ya/src/inicioSeccion.dart';
 
 // ignore: camel_case_types
@@ -90,9 +92,12 @@ class bottonGoogleSeccion extends StatelessWidget {
             backgroundColor: const Color.fromRGBO(255, 243, 13, 1),
             foregroundColor: const Color.fromARGB(255, 0, 0, 0),
           ),
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const homeEmpresa()));
+          onPressed: () async {
+            await autenticadorGoogle();
+            Navigator.pushReplacement(
+                // ignore: use_build_context_synchronously
+                context,
+                MaterialPageRoute(builder: (context) => const home()));
           },
           icon: const FaIcon(FontAwesomeIcons.google),
           label: const Text(

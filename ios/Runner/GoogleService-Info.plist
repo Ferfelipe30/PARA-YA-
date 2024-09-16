@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>760053968845-eskikp72j0lnl1fp0ar2caj6vobd7mvk.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.760053968845-eskikp72j0lnl1fp0ar2caj6vobd7mvk</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAz3KgvcwFYQjU3T_7wWhvm2ASZVsfpv6M</string>
+	<key>GCM_SENDER_ID</key>
+	<string>760053968845</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.paraYa</string>
+	<key>PROJECT_ID</key>
+	<string>para-ya-8d158</string>
+	<key>STORAGE_BUCKET</key>
+	<string>para-ya-8d158.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:760053968845:ios:274ee803d7d8318a281e84</string>
+	<key>DATABASE_URL</key>
+	<string>https://para-ya-8d158-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
