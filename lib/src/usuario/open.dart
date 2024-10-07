@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:para_ya/src/Empresa/homeEmpresa.dart';
 import 'package:para_ya/src/Empresa/inicioSeccionEmpresa.dart';
-import 'package:para_ya/src/autenticadorGoogle.dart';
-import 'package:para_ya/src/home.dart';
-import 'package:para_ya/src/inicioSeccion.dart';
+import 'package:para_ya/src/autentic/autenticadorGoogle.dart';
+import 'package:para_ya/src/usuario/home.dart';
+import 'package:para_ya/src/usuario/inicioSeccion.dart';
 
 // ignore: camel_case_types
 class open extends StatefulWidget {

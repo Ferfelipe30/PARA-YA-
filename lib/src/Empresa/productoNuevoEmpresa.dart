@@ -1,9 +1,12 @@
 // ignore_for_file: file_names
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:para_ya/src/Empresa/menuEmpresa.dart';
+import 'package:para_ya/src/services/selectImage.dart';
+import 'package:para_ya/src/services/uploadImage.dart';
+//import 'package:para_ya/src/Empresa/menuEmpresa.dart';
 
 // ignore: camel_case_types
 class productoNuevoEmpresa extends StatefulWidget {
@@ -16,10 +19,29 @@ class productoNuevoEmpresa extends StatefulWidget {
 // ignore: camel_case_types
 class productoNuevoEmpresaPage extends State<productoNuevoEmpresa> {
   final formKey = GlobalKey<FormState>();
-  final nombre = TextEditingController();
-  final descripcion = TextEditingController();
-  final precio = TextEditingController();
+  final nombreProducto = TextEditingController();
+  final descripcionProducto = TextEditingController();
   File? image;
+  final firebase = FirebaseFirestore.instance;
+
+  @override
+  void dispose() {
+    nombreProducto.dispose();
+    descripcionProducto.dispose();
+    super.dispose();
+  }
+
+  productoNew() async {
+    try {
+      await firebase.collection('producto').add({
+        'nombreProducto': nombreProducto.text,
+        'descripcionProducto': descripcionProducto.text,
+      });
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error desconocido: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,58 +60,129 @@ class productoNuevoEmpresaPage extends State<productoNuevoEmpresa> {
               child: Form(
                 child: Column(
                   children: <Widget>[
-                    // ignore: unnecessary_null_comparison
                     image != null
                         ? Image.file(image!)
-                        : const Text('No hay imagen seleccionada'),
-                    const SizedBox(height: 20),
+                        : Container(
+                            margin: const EdgeInsets.all(10),
+                            height: 200,
+                            width: 200,
+                          ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                          child: const Text('Tomar foto'),
                           onPressed: () async {
-                            final picker = ImagePicker();
-                            final XFile? pickedFile = await picker.pickImage(
-                                source: ImageSource.camera);
+                            final XFile? foto = await getFoto();
                             setState(() {
-                              if (pickedFile != null) {
-                                image = File(pickedFile.path);
-                              } else {
-                                image = null;
-                              }
+                              image = File(foto!.path);
                             });
                           },
+                          child: const Text("Camara"),
+                        ),
+                        const SizedBox(
+                          width: 10,
                         ),
                         ElevatedButton(
-                          child: const Text('Seleccionar desde galería'),
                           onPressed: () async {
-                            final picker = ImagePicker();
-                            final XFile? pickedFile = await picker.pickImage(
-                                source: ImageSource.gallery);
+                            final XFile? imagen = await getImage();
                             setState(() {
-                              if (pickedFile != null) {
-                                image = File(pickedFile.path);
-                              } else {
-                                image = null;
-                              }
+                              image = File(imagen!.path);
                             });
                           },
+                          child: const Text("Galeria"),
                         ),
                       ],
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
-                    nombreProducto(),
+                    TextFormField(
+                      maxLines: 1,
+                      controller: nombreProducto,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Nombre del producto',
+                        labelStyle:
+                            TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                        ),
+                      ),
+                    ),
                     const SizedBox(
                       height: 10,
                     ),
-                    descripcionProducto(),
+                    TextFormField(
+                      maxLines: 10,
+                      controller: descripcionProducto,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Descripcion del producto',
+                        labelStyle:
+                            TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                        ),
+                      ),
+                    ),
                     const SizedBox(
                       height: 10,
                     ),
-                    const buttonProductoNew(),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromRGBO(255, 243, 13, 1),
+                        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                      ),
+                      onPressed: () async {
+                        productoNew();
+                        // ignore: avoid_print
+                        print('...Enviado');
+                        if (formKey.currentState?.validate() ?? false) {
+                          formKey.currentState!.save();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Producto nuevo registrado'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text('Error de registro de producto'),
+                            backgroundColor: Colors.red,
+                          ));
+                        }
+                        if (image == null) {
+                          return;
+                        }
+                        final uploaded = await uploadImage(image!);
+                        if (uploaded) {
+                          // ignore: avoid_print
+                          print('Se envio la imagen correctamente.');
+                        } else {
+                          // ignore: avoid_print
+                          print('Error de envio de la imagen.');
+                        }
+                      },
+                      child: const Text('Guardar'),
+                    ),
                   ],
                 ),
               ),
@@ -97,79 +190,6 @@ class productoNuevoEmpresaPage extends State<productoNuevoEmpresa> {
           ),
         ),
       ),
-    );
-  }
-}
-
-// ignore: camel_case_types
-class nombreProducto extends StatelessWidget {
-  nombreProducto({super.key});
-  final nombre = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      maxLines: 1,
-      controller: nombre,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: 'Nombre del producto',
-        labelStyle: TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
-        filled: true,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: camel_case_types
-class descripcionProducto extends StatelessWidget {
-  descripcionProducto({super.key});
-  final descripcion = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      maxLines: 10,
-      controller: descripcion,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: 'Descripcion del producto',
-        labelStyle: TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
-        filled: true,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: camel_case_types
-class buttonProductoNew extends StatelessWidget {
-  const buttonProductoNew({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromRGBO(255, 243, 13, 1),
-        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      ),
-      onPressed: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const menuEmpresa()));
-      },
-      child: const Text('Guardar'),
     );
   }
 }

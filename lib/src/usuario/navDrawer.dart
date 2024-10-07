@@ -1,10 +1,10 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:para_ya/src/envio.dart';
-import 'package:para_ya/src/home.dart';
-import 'package:para_ya/src/productoMenu.dart';
-import 'package:para_ya/src/user.dart';
+import 'package:para_ya/src/usuario/envio.dart';
+import 'package:para_ya/src/usuario/home.dart';
+import 'package:para_ya/src/usuario/productoMenu.dart';
+import 'package:para_ya/src/usuario/user.dart';
 
 // ignore: camel_case_types
 class navDrawer extends StatefulWidget {

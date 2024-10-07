@@ -1,4 +1,5 @@
 // ignore_for_file: file_names
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:para_ya/src/Empresa/menuEmpresa.dart';
@@ -14,6 +15,33 @@ class inicioSeccionEmpresa extends StatefulWidget {
 // ignore: camel_case_types
 class inicioSeccionEmpresaPage extends State<inicioSeccionEmpresa> {
   final formKey = GlobalKey<FormState>();
+  final firebase = FirebaseFirestore.instance;
+  final nombre = TextEditingController();
+  final email = TextEditingController();
+  final tipoEmpresa = TextEditingController();
+  final pais = TextEditingController();
+  final departamento = TextEditingController();
+  final ciudad = TextEditingController();
+  final direccion = TextEditingController();
+  final celular = TextInputType.phone;
+
+  loginEmpresa() async {
+    try {
+      await firebase.collection('empresas').doc().set({
+        'nombreEmpresa': nombre.text,
+        'emailEmpresa': email.text,
+        'celular': celular.index,
+        'tipoEmpresa': tipoEmpresa.text,
+        'pais': pais.text,
+        'departamento': departamento.text,
+        'ciudad': ciudad.text,
+        'direccion': direccion.text,
+      });
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error ...$e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,39 +65,222 @@ class inicioSeccionEmpresaPage extends State<inicioSeccionEmpresa> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        nombreEmpresa(),
+                        TextFormField(
+                          maxLines: 1,
+                          controller: nombre,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Nombre de la empresa',
+                            labelStyle:
+                                TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
+                            filled: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                          ),
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
-                        emailEmpresa(),
+                        TextFormField(
+                          maxLines: 1,
+                          controller: email,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Email de la Empresa',
+                            labelStyle:
+                                TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
+                            filled: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                          ),
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
-                        empresaTipo(),
+                        TextFormField(
+                          maxLines: 1,
+                          controller: tipoEmpresa,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: '¿Que tipo de empresa es?',
+                            labelStyle:
+                                TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
+                            filled: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                          ),
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
-                        const paisEmpresa(),
+                        TextFormField(
+                          maxLines: 1,
+                          controller: pais,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Pais',
+                            labelStyle:
+                                TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
+                            filled: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                          ),
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
-                        const departamentoEmpresa(),
+                        TextFormField(
+                          maxLines: 1,
+                          controller: departamento,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Departamento',
+                            labelStyle:
+                                TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
+                            filled: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                          ),
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
-                        ciudadEmpresa(),
+                        TextFormField(
+                          maxLines: 1,
+                          controller: ciudad,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Ciudad',
+                            labelStyle:
+                                TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
+                            filled: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                          ),
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
-                        direccionLocal(),
+                        TextFormField(
+                          maxLines: 1,
+                          controller: direccion,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Direccion del Local',
+                            labelStyle:
+                                TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
+                            filled: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                          ),
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
-                        const celularEmpresa(),
+                        TextFormField(
+                          maxLines: 1,
+                          keyboardType: celular,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Numero de Celular',
+                            labelStyle:
+                                TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
+                            filled: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                          ),
+                        ),
                         const SizedBox(
                           height: 15,
                         ),
-                        const buttonNewEmpresa(),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromRGBO(255, 243, 13, 1),
+                            foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16)),
+                          ),
+                          onPressed: () {
+                            loginEmpresa();
+                            // ignore: avoid_print
+                            print('...Enviado');
+                            if (formKey.currentState!.validate()) {
+                              formKey.currentState!.save();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Nuevo Usuario registrado'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const menuEmpresa()));
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      'Error de registro de nuevo usuario'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          },
+                          child: const Text('Registrar'),
+                        ),
                       ],
                     ),
                   ),
@@ -77,304 +288,6 @@ class inicioSeccionEmpresaPage extends State<inicioSeccionEmpresa> {
               ),
             ),
           )),
-    );
-  }
-}
-
-// ignore: camel_case_types
-class nombreEmpresa extends StatelessWidget {
-  nombreEmpresa({super.key});
-  final nombre = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      maxLines: 1,
-      controller: nombre,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: 'Nombre de la Empresa',
-        labelStyle: TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
-        filled: true,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: camel_case_types
-class emailEmpresa extends StatelessWidget {
-  emailEmpresa({super.key});
-  final email = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      maxLines: 1,
-      controller: email,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: 'Email de la Empresa',
-        labelStyle: TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
-        filled: true,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: camel_case_types
-class empresaTipo extends StatelessWidget {
-  empresaTipo({super.key});
-  final tipoEmpresa = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      maxLines: 1,
-      controller: tipoEmpresa,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: '¿Que tipo de empresa es?',
-        labelStyle: TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
-        filled: true,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: camel_case_types
-class paisEmpresa extends StatefulWidget {
-  const paisEmpresa({super.key});
-
-  @override
-  paisEmpresaPage createState() => paisEmpresaPage();
-}
-
-// ignore: camel_case_types
-class paisEmpresaPage extends State<paisEmpresa> {
-  String? paiss;
-  List<String> paises = [
-    'Argentina',
-    'Bolivia',
-    'Brasil',
-    'Chile',
-    'Colombia',
-    'Ecuador',
-    'Guyana',
-    'Paraguay',
-    'Perú',
-    'Surinam',
-    'Uruguay',
-    'Venezuela',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButtonFormField<String>(
-      decoration: const InputDecoration(
-        labelText: 'País',
-        border: OutlineInputBorder(),
-      ),
-      value: paiss,
-      items: paises.map<DropdownMenuItem<String>>((String pais) {
-        return DropdownMenuItem<String>(
-          value: pais,
-          child: Text(pais),
-        );
-      }).toList(),
-      onChanged: (String? newValue) {
-        setState(() {
-          paiss = newValue;
-        });
-      },
-    );
-  }
-}
-
-// ignore: camel_case_types
-class departamentoEmpresa extends StatefulWidget {
-  const departamentoEmpresa({super.key});
-
-  @override
-  departamentoEmpresaPage createState() => departamentoEmpresaPage();
-}
-
-// ignore: camel_case_types
-class departamentoEmpresaPage extends State<departamentoEmpresa> {
-  String? departamento;
-  List<String> departamentos = [
-    'Amazonas',
-    'Antioquía',
-    'Arauca',
-    'Atlántico',
-    'Bolívar',
-    'Boyacá',
-    'Caldas',
-    'Caquetá',
-    'Casanare',
-    'Cauca',
-    'Cesar',
-    'Chocó',
-    'Córdoba',
-    'Cundinamarca',
-    'Guainía',
-    'Guaviare',
-    'Huila',
-    'La Guajira',
-    'Magdalena',
-    'Meta',
-    'Nariño',
-    'Norte de Santander',
-    'Putumayo',
-    'Quindío',
-    'Risaralda',
-    'San Andrés y Providencia',
-    'Santander',
-    'Sucre',
-    'Tolima',
-    'Valle del Cauca',
-    'Vaupés',
-    'Vichada',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButtonFormField<String>(
-      decoration: const InputDecoration(
-        labelText: 'Departamento',
-        border: OutlineInputBorder(),
-      ),
-      value: departamento,
-      items: departamentos.map<DropdownMenuItem<String>>((String depart) {
-        return DropdownMenuItem<String>(
-          value: depart,
-          child: Text(depart),
-        );
-      }).toList(),
-      onChanged: (String? newValue) {
-        setState(() {
-          departamento = newValue;
-        });
-      },
-    );
-  }
-}
-
-// ignore: camel_case_types
-class celularEmpresa extends StatelessWidget {
-  const celularEmpresa({super.key});
-  final celular = TextInputType.phone;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      maxLines: 1,
-      keyboardType: celular,
-      inputFormatters: <TextInputFormatter>[
-        FilteringTextInputFormatter.digitsOnly
-      ],
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: 'Numero de Celular',
-        labelStyle: TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
-        filled: true,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: camel_case_types
-class direccionLocal extends StatelessWidget {
-  direccionLocal({super.key});
-  final direccion = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      maxLines: 1,
-      controller: direccion,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: 'Direccion del Local',
-        labelStyle: TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
-        filled: true,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: camel_case_types
-class ciudadEmpresa extends StatelessWidget {
-  ciudadEmpresa({super.key});
-  final ciudad = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      maxLines: 1,
-      controller: ciudad,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: 'Ciudad donde se encuentra',
-        labelStyle: TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
-        filled: true,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: camel_case_types
-class buttonNewEmpresa extends StatelessWidget {
-  const buttonNewEmpresa({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromRGBO(255, 243, 13, 1),
-        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      ),
-      onPressed: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const menuEmpresa()));
-      },
-      child: const Text('Registrar'),
     );
   }
 }
