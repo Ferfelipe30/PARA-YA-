@@ -41,48 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDpI9a7ZLlgIkDrC00DSabcJMai1vgiYyc',
-    appId: '1:760053968845:web:556d81e638d295b0281e84',
-    messagingSenderId: '760053968845',
-    projectId: 'para-ya-8d158',
-    authDomain: 'para-ya-8d158.firebaseapp.com',
-    storageBucket: 'para-ya-8d158.appspot.com',
-    measurementId: 'G-Q4KETT4S2J',
+    apiKey: 'AIzaSyCdiaR1vpcXp0hNncR_N6exsx_nEe0cuy0',
+    appId: '1:643480023034:web:a60f44a27105983fc7be43',
+    messagingSenderId: '643480023034',
+    projectId: 'para-ya-28de5',
+    authDomain: 'para-ya-28de5.firebaseapp.com',
+    storageBucket: 'para-ya-28de5.appspot.com',
+    measurementId: 'G-47V9Z18FLB',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAE2GFC9d4bHZ9hwEjwetC9os-vHA-cL0A',
-    appId: '1:760053968845:android:fa978a0d662873eb281e84',
-    messagingSenderId: '760053968845',
-    projectId: 'para-ya-8d158',
-    storageBucket: 'para-ya-8d158.appspot.com',
+    apiKey: 'AIzaSyAViWStz5M4OkJ1ogJrYjJYqFD9cqDlCEI',
+    appId: '1:643480023034:android:be552201c40ec63dc7be43',
+    messagingSenderId: '643480023034',
+    projectId: 'para-ya-28de5',
+    storageBucket: 'para-ya-28de5.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAz3KgvcwFYQjU3T_7wWhvm2ASZVsfpv6M',
-    appId: '1:760053968845:ios:274ee803d7d8318a281e84',
-    messagingSenderId: '760053968845',
-    projectId: 'para-ya-8d158',
-    storageBucket: 'para-ya-8d158.appspot.com',
+    apiKey: 'AIzaSyD5goKgo6JL5mfJgxQBcOZzt1rZpmW70g8',
+    appId: '1:643480023034:ios:1af9884b5589f03cc7be43',
+    messagingSenderId: '643480023034',
+    projectId: 'para-ya-28de5',
+    storageBucket: 'para-ya-28de5.appspot.com',
     iosBundleId: 'com.example.paraYa',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAz3KgvcwFYQjU3T_7wWhvm2ASZVsfpv6M',
-    appId: '1:760053968845:ios:274ee803d7d8318a281e84',
-    messagingSenderId: '760053968845',
-    projectId: 'para-ya-8d158',
-    storageBucket: 'para-ya-8d158.appspot.com',
+    apiKey: 'AIzaSyD5goKgo6JL5mfJgxQBcOZzt1rZpmW70g8',
+    appId: '1:643480023034:ios:1af9884b5589f03cc7be43',
+    messagingSenderId: '643480023034',
+    projectId: 'para-ya-28de5',
+    storageBucket: 'para-ya-28de5.appspot.com',
     iosBundleId: 'com.example.paraYa',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDpI9a7ZLlgIkDrC00DSabcJMai1vgiYyc',
-    appId: '1:760053968845:web:3c563f69e1977b76281e84',
-    messagingSenderId: '760053968845',
-    projectId: 'para-ya-8d158',
-    authDomain: 'para-ya-8d158.firebaseapp.com',
-    storageBucket: 'para-ya-8d158.appspot.com',
-    measurementId: 'G-95X06G15CQ',
+    apiKey: 'AIzaSyCdiaR1vpcXp0hNncR_N6exsx_nEe0cuy0',
+    appId: '1:643480023034:web:eaa19c16bc6203ffc7be43',
+    messagingSenderId: '643480023034',
+    projectId: 'para-ya-28de5',
+    authDomain: 'para-ya-28de5.firebaseapp.com',
+    storageBucket: 'para-ya-28de5.appspot.com',
+    measurementId: 'G-RZN6RWCZNZ',
   );
+
 }

@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:para_ya/src/Empresa/menuEmpresa.dart';
@@ -16,6 +17,7 @@ class inicioSeccionEmpresa extends StatefulWidget {
 class inicioSeccionEmpresaPage extends State<inicioSeccionEmpresa> {
   final formKey = GlobalKey<FormState>();
   final firebase = FirebaseFirestore.instance;
+  final auth = FirebaseAuth.instance;
   final nombre = TextEditingController();
   final email = TextEditingController();
   final tipoEmpresa = TextEditingController();
@@ -24,12 +26,17 @@ class inicioSeccionEmpresaPage extends State<inicioSeccionEmpresa> {
   final ciudad = TextEditingController();
   final direccion = TextEditingController();
   final celular = TextInputType.phone;
+  final password = TextEditingController();
 
-  loginEmpresa() async {
+  void loginEmpresa() async {
     try {
-      await firebase.collection('empresas').doc().set({
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+          email: email.text, password: password.text);
+
+      await firebase.collection('empresas').doc(userCredential.user?.uid).set({
         'nombreEmpresa': nombre.text,
         'emailEmpresa': email.text,
+        'password': password.text,
         'celular': celular.index,
         'tipoEmpresa': tipoEmpresa.text,
         'pais': pais.text,
@@ -111,10 +118,57 @@ class inicioSeccionEmpresaPage extends State<inicioSeccionEmpresa> {
                         ),
                         TextFormField(
                           maxLines: 1,
+                          controller: password,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Password de la Empresa',
+                            labelStyle:
+                                TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
+                            filled: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TextFormField(
+                          maxLines: 1,
                           controller: tipoEmpresa,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: '¿Que tipo de empresa es?',
+                            labelStyle:
+                                TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
+                            filled: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TextFormField(
+                          maxLines: 1,
+                          keyboardType: celular,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Numero de Celular',
                             labelStyle:
                                 TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
                             filled: true,
@@ -203,31 +257,6 @@ class inicioSeccionEmpresaPage extends State<inicioSeccionEmpresa> {
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Direccion del Local',
-                            labelStyle:
-                                TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
-                            filled: true,
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextFormField(
-                          maxLines: 1,
-                          keyboardType: celular,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Numero de Celular',
                             labelStyle:
                                 TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
                             filled: true,
