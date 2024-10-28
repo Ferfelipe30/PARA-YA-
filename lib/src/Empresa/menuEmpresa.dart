@@ -16,9 +16,8 @@ class menuEmpresa extends StatefulWidget {
 
 // ignore: camel_case_types
 class menuEmpresaPage extends State<menuEmpresa> {
-  final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
-
+  final User? user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -34,62 +33,51 @@ class menuEmpresaPage extends State<menuEmpresa> {
           body: Center(
               child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(
-              children: <Widget>[
-                const Text('Menu de Productos'),
-                const botonRegistroMenu(),
-                StreamBuilder<QuerySnapshot>(
-                    stream: firestore
-                        .collection('productos')
-                        .where('userId', isEqualTo: auth.currentUser?.uid)
-                        .snapshots(),
-                    builder: (context, snackshop) {
-                      if (!snackshop.hasData) {
-                        return const CircularProgressIndicator();
-                      }
-                      final productos = snackshop.data!.docs;
-                      return Column(
-                        children: [
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: productos.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Text(productos[index]['productName']),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      );
-
-                      /*List<Widget> productWidgets = [];
-                      for (var producto in productos) {
-                        final nombreProducto = producto['nombreProducto'];
-                        final descripcionProducto =
-                            producto['descripcionProducto'];
-                        productWidgets.add(
-                          ListTile(
-                            title: Text(nombreProducto),
-                            subtitle: Text(descripcionProducto),
-                          ),
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  const Text('Menu de Productos'),
+                  const botonRegistroMenu(),
+                  StreamBuilder(
+                      stream: firestore
+                          .collection('producto')
+                          .where('userID', isEqualTo: user?.email)
+                          .snapshots(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        }
+                        final products = snapshot.data!.docs;
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              fit: FlexFit.loose,
+                              child: ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: products.length,
+                                itemBuilder: (context, index) {
+                                  final product = products[index];
+                                  return ListTile(
+                                    title: Text(product['nombreProducto']),
+                                    subtitle:
+                                        Text(product['descripcionProducto']),
+                                  );
+                                },
+                              ),
+                            )
+                          ],
                         );
-                      }
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                            fit: FlexFit.loose,
-                            child: ListView(
-                              shrinkWrap: true,
-                              children: productWidgets,
-                            ),
-                          ),
-                        ],
-                      );*/
-                    }),
-                const buttonGuardarMenu(),
-              ],
+                      }),
+                  const buttonGuardarMenu(),
+                ],
+              ),
             ),
           )),
         ),
