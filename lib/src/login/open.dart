@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:para_ya/src/Empresa/homeEmpresa.dart';
 import 'package:para_ya/src/Empresa/inicioSeccionEmpresa.dart';
-import 'package:para_ya/src/autentic/autenticadorGoogle.dart';
 import 'package:para_ya/src/autentic/facebook.dart';
+import 'package:para_ya/src/autentic/google.dart';
 import 'package:para_ya/src/usuario/home.dart';
 import 'package:para_ya/src/usuario/inicioSeccion.dart';
 
@@ -95,7 +95,9 @@ class bottonGoogleSeccion extends StatelessWidget {
             foregroundColor: const Color.fromARGB(255, 0, 0, 0),
           ),
           onPressed: () async {
-            await autenticadorGoogle();
+            User? user = await google.iniciarSeccion(context: context);
+            // ignore: avoid_print
+            print(user?.displayName);
             Navigator.pushReplacement(
                 // ignore: use_build_context_synchronously
                 context,
