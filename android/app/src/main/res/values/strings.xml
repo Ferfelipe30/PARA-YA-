@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">para ya</string>
+    <string name="facebook_app_id">1674128343164776</string>
+    <string name="fb_login_protocol_scheme">fb1674128343164776</string>
+    <string name="facebook_client_token">8670016bde01e9b6f16e73001180e73c</string>
+</resources>

@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:para_ya/src/Empresa/homeEmpresa.dart';
 import 'package:para_ya/src/Empresa/inicioSeccionEmpresa.dart';
 import 'package:para_ya/src/autentic/autenticadorGoogle.dart';
+import 'package:para_ya/src/autentic/facebook.dart';
 import 'package:para_ya/src/usuario/home.dart';
 import 'package:para_ya/src/usuario/inicioSeccion.dart';
 
@@ -124,17 +126,27 @@ class botonesIniciarSecciones extends StatelessWidget {
             children: <Widget>[
               FloatingActionButton(
                 heroTag: 'unique-tag-for-this-fab',
-                backgroundColor: const Color.fromRGBO(255, 243, 13, 1),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const homeEmpresa()));
+                backgroundColor: Colors.blueAccent,
+                onPressed: () async {
+                  User? user = await facebook();
+                  if (user != null) {
+                    // ignore: avoid_print
+                    print('Inicio de Sesion Exitoso: ${user.displayName}');
+                    Navigator.push(
+                        // ignore: use_build_context_synchronously
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const homeEmpresa()));
+                  } else {
+                    // ignore: avoid_print
+                    print(
+                        'Error de Inicion de sesion cancelado o fallida con facebook');
+                  }
                 },
                 child: const Icon(
                   Icons.facebook,
                   size: 50,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
               )
             ],
