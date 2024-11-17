@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <application
         android:label="para_ya"
         android:name="${applicationName}"
@@ -60,6 +61,13 @@
    	    <meta-data 
             android:name="com.facebook.sdk.ClientToken" 
             android:value="@string/facebook_client_token"/>
+        <service 
+            android:name="io.flutter.plugins.firebasemessaging.FirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility?hl=en and

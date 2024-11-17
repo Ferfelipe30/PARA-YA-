@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:para_ya/firebase_options.dart';
 import 'package:para_ya/src/login/open.dart';
+import 'package:para_ya/src/services/notificacion.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,6 +13,8 @@ void main() async {
   FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
   );
+  notificacion mensaje = notificacion();
+  await mensaje.init();
   runApp(const MyApp());
 }
 

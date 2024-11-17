@@ -25,6 +25,7 @@ dependencies:
   change_app_package_name: ^1.4.0
   firebase_app_check: ^0.3.1+4
   flutter_facebook_auth: ^6.0.4
+  firebase_messaging: ^15.1.5
 
 dev_dependencies:
   flutter_test:
