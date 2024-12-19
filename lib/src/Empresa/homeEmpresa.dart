@@ -17,15 +17,48 @@ class homeEmpresaPage extends State<homeEmpresa> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const nav(),
-      appBar: AppBar(
-        title: TextField(
-          controller: buscar,
-          decoration: const InputDecoration(
-              hintText: 'Buscar', border: InputBorder.none),
+    return MaterialApp(
+      home: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/cityfondo.webp'),
+              fit: BoxFit.cover),
         ),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
+        child: Scaffold(
+          backgroundColor: const Color.fromARGB(197, 255, 255, 255),
+          drawer: const nav(),
+          appBar: AppBar(
+            title: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: TextField(
+                controller: buscar,
+                decoration: InputDecoration(
+                  hintText: 'Buscar',
+                  border: InputBorder.none,
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: Colors.green,
+                  ),
+                  suffixIcon: buscar.text.isNotEmpty
+                      ? IconButton(
+                          onPressed: () {
+                            buscar.clear();
+                          },
+                          icon: const Icon(
+                            Icons.clear,
+                            color: Colors.grey,
+                          ),
+                        )
+                      : null,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

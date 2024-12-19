@@ -15,13 +15,22 @@ class userEmpresa extends StatefulWidget {
 class userEmpresaPage extends State<userEmpresa> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const nav(),
-      appBar: AppBar(
-        title: const Text('Usuario'),
-        centerTitle: true,
+    return MaterialApp(
+      home: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/cityfondo.webp'),
+              fit: BoxFit.cover),
+        ),
+        child: Scaffold(
+          backgroundColor: const Color.fromARGB(197, 255, 255, 255),
+          drawer: const nav(),
+          appBar: AppBar(
+            title: const Text('Usuario'),
+            centerTitle: true,
+          ),
+        ),
       ),
-      body: const Text('User'),
     );
   }
 }

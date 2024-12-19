@@ -16,19 +16,28 @@ class productosMenu extends StatefulWidget {
 class productosMenuPage extends State<productosMenu> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const nav(),
-      appBar: AppBar(
-        title: const Text('Productos'),
-        centerTitle: true,
-      ),
-      body: const Text('Menu'),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const productoNew()));
-        },
-        child: const Icon(Icons.restaurant),
+    return MaterialApp(
+      home: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/cityfondo.webp'),
+              fit: BoxFit.cover),
+        ),
+        child: Scaffold(
+          backgroundColor: const Color.fromARGB(197, 255, 255, 255),
+          drawer: const nav(),
+          appBar: AppBar(
+            title: const Text('Productos'),
+            centerTitle: true,
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const productoNew()));
+            },
+            child: const Icon(Icons.restaurant),
+          ),
+        ),
       ),
     );
   }
