@@ -15,13 +15,23 @@ class envioPage extends State<envio> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const navDrawer(),
-      appBar: AppBar(
-        title: const Text('Envio'),
-        centerTitle: true,
+    return MaterialApp(
+      home: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/cityfondo.webp'),
+              fit: BoxFit.cover),
+        ),
+        child: Scaffold(
+          backgroundColor: const Color.fromARGB(197, 255, 255, 255),
+          drawer: const navDrawer(),
+          appBar: AppBar(
+            title: const Text('Envio'),
+            centerTitle: true,
+          ),
+          body: const Text('Envio'),
+        ),
       ),
-      body: const Text('Envio'),
     );
   }
 }

@@ -15,13 +15,24 @@ class productoMenuPage extends State<productoMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const navDrawer(),
-      appBar: AppBar(
-        title: const Text('Menu Productos'),
-        centerTitle: true,
+    return MaterialApp(
+      home: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/cityfondo.webp'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Scaffold(
+          backgroundColor: const Color.fromARGB(197, 255, 255, 255),
+          drawer: const navDrawer(),
+          appBar: AppBar(
+            title: const Text('Menu Productos'),
+            centerTitle: true,
+          ),
+          body: const Text('Menu de productos'),
+        ),
       ),
-      body: const Text('Menu de productos'),
     );
   }
 }
