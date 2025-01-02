@@ -3,11 +3,10 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:para_ya/src/Empresa/menuEmpresa.dart';
-import 'package:para_ya/src/services/selectImage.dart';
-import 'package:para_ya/src/services/uploadImage.dart';
 //import 'package:para_ya/src/Empresa/menuEmpresa.dart';
 
 // ignore: camel_case_types
@@ -34,19 +33,68 @@ class productoNuevoEmpresaPage extends State<productoNuevoEmpresa> {
     super.dispose();
   }
 
-  void productoNew() async {
+  Future<void> pickImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+    if (pickedFile != null) {
+      setState(() {
+        image = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<String?> _uploadImage(File image) async {
     try {
-      final user = auth.currentUser;
-      if (user != null) {
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('product_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      final uploadTask = storageRef.putFile(image);
+      final snapshot = await uploadTask.whenComplete(() => {});
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error uploading image: $e');
+      return null;
+    }
+  }
+
+  void productoNew() async {
+    if (formKey.currentState!.validate()) {
+      try {
+        String? imageUrl;
+        if (image != null) {
+          imageUrl = await _uploadImage(image!);
+        }
         await firebase.collection('producto').add({
           'nombreProducto': nombreProducto.text,
           'descripcionProducto': descripcionProducto.text,
-          'userID': user.uid
+          'imageUrl': imageUrl,
+          'userID': auth.currentUser!.uid,
+          'timestamp': FieldValue.serverTimestamp(),
         });
+
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Producto agregado exitosamente')),
+        );
+
+        nombreProducto.clear();
+        descripcionProducto.clear();
+        setState(() {
+          image = null;
+        });
+
+        Navigator.pushReplacement(
+            // ignore: use_build_context_synchronously
+            context,
+            MaterialPageRoute(builder: (context) => const menuEmpresa()));
+      } catch (e) {
+        // ignore: avoid_print
+        print('Error adding product: $e');
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Error al agregar el producto')));
       }
-    } catch (e) {
-      // ignore: avoid_print
-      print('Error desconocido: $e');
     }
   }
 
@@ -65,15 +113,40 @@ class productoNuevoEmpresaPage extends State<productoNuevoEmpresa> {
           body: Center(
             child: SingleChildScrollView(
               child: Form(
+                key: formKey,
                 child: Column(
                   children: <Widget>[
-                    image != null
-                        ? Image.file(image!)
-                        : Container(
-                            margin: const EdgeInsets.all(10),
-                            height: 200,
-                            width: 200,
-                          ),
+                    Container(
+                        margin: const EdgeInsets.all(10),
+                        height: 200,
+                        width: 200,
+                        decoration: BoxDecoration(
+                            color: Colors.yellow[200],
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 10,
+                                offset: Offset(0, 5),
+                              ),
+                            ],
+                            border: Border.all(
+                              color: Colors.yellow,
+                              width: 2,
+                            )),
+                        child: image != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.file(
+                                  image!,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : const Icon(
+                                Icons.image,
+                                size: 100,
+                                color: Colors.black26,
+                              )),
                     const SizedBox(
                       height: 10,
                     ),
@@ -81,24 +154,14 @@ class productoNuevoEmpresaPage extends State<productoNuevoEmpresa> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                          onPressed: () async {
-                            final XFile? foto = await getFoto();
-                            setState(() {
-                              image = File(foto!.path);
-                            });
-                          },
+                          onPressed: () => pickImage(ImageSource.camera),
                           child: const Text("Camara"),
                         ),
                         const SizedBox(
                           width: 10,
                         ),
                         ElevatedButton(
-                          onPressed: () async {
-                            final XFile? imagen = await getImage();
-                            setState(() {
-                              image = File(imagen!.path);
-                            });
-                          },
+                          onPressed: () => pickImage(ImageSource.gallery),
                           child: const Text("Galeria"),
                         ),
                       ],
@@ -161,7 +224,7 @@ class productoNuevoEmpresaPage extends State<productoNuevoEmpresa> {
                         productoNew();
                         // ignore: avoid_print
                         print('...Enviado');
-                        if (formKey.currentState?.validate() ?? false) {
+                        /*if (formKey.currentState?.validate() ?? false) {
                           formKey.currentState!.save();
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -191,7 +254,7 @@ class productoNuevoEmpresaPage extends State<productoNuevoEmpresa> {
                             // ignore: use_build_context_synchronously
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const menuEmpresa()));
+                                builder: (context) => const menuEmpresa()));*/
                       },
                       child: const Text('Guardar'),
                     ),

@@ -41,7 +41,7 @@ class menuEmpresaPage extends State<menuEmpresa> {
                   StreamBuilder(
                       stream: firestore
                           .collection('producto')
-                          .where('userID', isEqualTo: user?.email)
+                          .where('userID', isEqualTo: user?.uid)
                           .snapshots(),
                       builder:
                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -52,28 +52,23 @@ class menuEmpresaPage extends State<menuEmpresa> {
                             ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         }
-                        final products = snapshot.data!.docs;
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Flexible(
-                              fit: FlexFit.loose,
-                              child: ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: products.length,
-                                itemBuilder: (context, index) {
-                                  final product = products[index];
-                                  return ListTile(
-                                    title: Text(product['nombreProducto']),
-                                    subtitle:
-                                        Text(product['descripcionProducto']),
-                                  );
-                                },
-                              ),
-                            )
-                          ],
-                        );
+                        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                          return const Text('No hay productos agregados.');
+                        }
+
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              var product = snapshot.data!.docs[index];
+                              return ListTile(
+                                leading: product['imageUrl'] != null
+                                    ? Image.network(product['imageUrl'])
+                                    : const Icon(Icons.image),
+                                title: Text(product['nombreProducto']),
+                                subtitle: Text(product['descripcionProducto']),
+                              );
+                            });
                       }),
                   const buttonGuardarMenu(),
                 ],
