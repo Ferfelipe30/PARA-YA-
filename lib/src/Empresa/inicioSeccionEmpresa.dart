@@ -27,6 +27,7 @@ class inicioSeccionEmpresaPage extends State<inicioSeccionEmpresa> {
   final direccion = TextEditingController();
   final celular = TextInputType.phone;
   final password = TextEditingController();
+  bool isObscured = true;
 
   void loginEmpresa() async {
     try {
@@ -119,21 +120,33 @@ class inicioSeccionEmpresaPage extends State<inicioSeccionEmpresa> {
                         TextFormField(
                           maxLines: 1,
                           controller: password,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Password de la Empresa',
-                            labelStyle:
-                                TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
-                            filled: true,
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-                            ),
-                          ),
+                          obscureText: isObscured,
+                          decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              labelText: 'Password de la Empresa',
+                              labelStyle: const TextStyle(
+                                  color: Color.fromRGBO(1, 1, 1, 1)),
+                              filled: true,
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color.fromRGBO(1, 1, 1, 1)),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color.fromRGBO(1, 1, 1, 1)),
+                              ),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isObscured = !isObscured;
+                                  });
+                                },
+                                icon: Icon(
+                                  isObscured
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                              )),
                         ),
                         const SizedBox(
                           height: 10,

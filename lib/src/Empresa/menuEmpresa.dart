@@ -61,12 +61,29 @@ class menuEmpresaPage extends State<menuEmpresa> {
                             itemCount: snapshot.data!.docs.length,
                             itemBuilder: (context, index) {
                               var product = snapshot.data!.docs[index];
-                              return ListTile(
-                                leading: product['imageUrl'] != null
-                                    ? Image.network(product['imageUrl'])
-                                    : const Icon(Icons.image),
-                                title: Text(product['nombreProducto']),
-                                subtitle: Text(product['descripcionProducto']),
+                              var productData =
+                                  product.data() as Map<String, dynamic>;
+                              return Card(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 15),
+                                child: ListTile(
+                                  leading:
+                                      productData.containsKey('imageUrl') &&
+                                              product['imageUrl'] != null
+                                          ? Image.network(
+                                              productData['imageUrl'],
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : const Icon(
+                                              Icons.image,
+                                              size: 50,
+                                            ),
+                                  title: Text(product['nombreProducto']),
+                                  subtitle:
+                                      Text(product['descripcionProducto']),
+                                ),
                               );
                             });
                       }),

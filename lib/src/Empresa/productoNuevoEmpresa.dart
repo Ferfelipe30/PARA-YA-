@@ -7,7 +7,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:para_ya/src/Empresa/menuEmpresa.dart';
-//import 'package:para_ya/src/Empresa/menuEmpresa.dart';
 
 // ignore: camel_case_types
 class productoNuevoEmpresa extends StatefulWidget {
@@ -224,37 +223,6 @@ class productoNuevoEmpresaPage extends State<productoNuevoEmpresa> {
                         productoNew();
                         // ignore: avoid_print
                         print('...Enviado');
-                        /*if (formKey.currentState?.validate() ?? false) {
-                          formKey.currentState!.save();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Producto nuevo registrado'),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            content: Text('Error de registro de producto'),
-                            backgroundColor: Colors.red,
-                          ));
-                        }
-                        if (image == null) {
-                          return;
-                        }
-                        final uploaded = await uploadImage(image!);
-                        if (uploaded) {
-                          // ignore: avoid_print
-                          print('Se envio la imagen correctamente.');
-                        } else {
-                          // ignore: avoid_print
-                          print('Error de envio de la imagen.');
-                        }
-                        Navigator.push(
-                            // ignore: use_build_context_synchronously
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const menuEmpresa()));*/
                       },
                       child: const Text('Guardar'),
                     ),

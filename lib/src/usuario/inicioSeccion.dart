@@ -35,16 +35,38 @@ class inicioSeccionPage extends State<inicioSeccion> {
   final direccion = TextEditingController();
   final descripcion = TextEditingController();
   final ImagePicker picker = ImagePicker();
+  bool isObscured = true;
 
-  loginUsuario() async {
+  Future<void> pickImage(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
+    if (pickedFile != null) {
+      setState(() {
+        image = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<String?> uploadImage(File image) async {
     try {
-      String userId = const Uuid().v4();
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('profile_images/${const Uuid().v4()}.jpg');
+      final uploadTask = storageRef.putFile(image);
+      final snapshot = await uploadTask.whenComplete(() => {});
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error uploading image: $e');
+      return null;
+    }
+  }
+
+  Future<void> loginUsuario() async {
+    try {
       String? imageUrl;
       if (image != null) {
-        final storegeRef =
-            FirebaseStorage.instance.ref().child('profile_images/$userId.jpg');
-        await storegeRef.putFile(image!);
-        imageUrl = await storegeRef.getDownloadURL();
+        imageUrl = await uploadImage(image!);
       }
 
       await firebase.collection('usuario').add({
@@ -89,9 +111,37 @@ class inicioSeccionPage extends State<inicioSeccion> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      image != null
-                          ? Image.file(image!)
-                          : const Text('No hay imagen seleccionada'),
+                      Container(
+                          margin: const EdgeInsets.all(10),
+                          height: 200,
+                          width: 200,
+                          decoration: BoxDecoration(
+                              color: Colors.yellow[200],
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 5),
+                                ),
+                              ],
+                              border: Border.all(
+                                color: Colors.yellow,
+                                width: 2,
+                              )),
+                          child: image != null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: Image.file(
+                                    image!,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.image,
+                                  size: 100,
+                                  color: Colors.black,
+                                )),
                       const SizedBox(
                         height: 20,
                       ),
@@ -99,34 +149,12 @@ class inicioSeccionPage extends State<inicioSeccion> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           ElevatedButton(
-                            onPressed: () async {
-                              final picker = ImagePicker();
-                              final XFile? pickedFile = await picker.pickImage(
-                                  source: ImageSource.camera);
-                              setState(() {
-                                if (pickedFile != null) {
-                                  image = File(pickedFile.path);
-                                } else {
-                                  image = null;
-                                }
-                              });
-                            },
-                            child: const Text('Tomar foto'),
+                            onPressed: () => pickImage(ImageSource.camera),
+                            child: const Text('Camara'),
                           ),
                           ElevatedButton(
-                            onPressed: () async {
-                              final picker = ImagePicker();
-                              final XFile? pickedFile = await picker.pickImage(
-                                  source: ImageSource.gallery);
-                              setState(() {
-                                if (pickedFile != null) {
-                                  image = File(pickedFile.path);
-                                } else {
-                                  image = null;
-                                }
-                              });
-                            },
-                            child: const Text('Seleciona desde galeria'),
+                            onPressed: () => pickImage(ImageSource.gallery),
+                            child: const Text('Galeria'),
                           ),
                         ],
                       ),
@@ -227,21 +255,32 @@ class inicioSeccionPage extends State<inicioSeccion> {
                       TextFormField(
                         maxLines: 1,
                         controller: contrasena,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Contraseña',
-                          labelStyle:
-                              TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
-                          filled: true,
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
-                          ),
-                        ),
+                        obscureText: isObscured,
+                        decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            labelText: 'Contraseña',
+                            labelStyle: const TextStyle(
+                                color: Color.fromRGBO(1, 1, 1, 1)),
+                            filled: true,
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                            ),
+                            suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isObscured = !isObscured;
+                                  });
+                                },
+                                icon: Icon(
+                                  isObscured
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ))),
                       ),
                       const SizedBox(
                         height: 10,

@@ -37,7 +37,7 @@ class productosMenuPage extends State<productosMenu> {
           body: StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection('producto')
-                .where('userId', isEqualTo: user?.uid)
+                .where('userID', isEqualTo: user?.uid)
                 .snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) {
@@ -49,9 +49,11 @@ class productosMenuPage extends State<productosMenu> {
                 children: snapshot.data!.docs.map((document) {
                   return Card(
                     child: ListTile(
-                      leading: Image.network(document['imageUrl']),
-                      title: Text(document['nombre']),
-                      subtitle: Text(document['descripcion']),
+                      leading: document['imageUrl'] != null
+                          ? Image.network(document['imageUrl'])
+                          : const Icon(Icons.image),
+                      title: Text(document['nombreProducto']),
+                      subtitle: Text(document['descripcionProducto']),
                     ),
                   );
                 }).toList(),

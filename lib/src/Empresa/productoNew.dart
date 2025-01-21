@@ -1,8 +1,10 @@
 // ignore_for_file: file_names
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:para_ya/src/Empresa/productosMenu.dart';
 
 // ignore: camel_case_types
@@ -18,8 +20,80 @@ class productoNewPage extends State<productoNew> {
   final formKey = GlobalKey<FormState>();
   final nombre = TextEditingController();
   final descripcion = TextEditingController();
-  final precio = TextEditingController();
   File? image;
+  final firebase = FirebaseFirestore.instance;
+
+  @override
+  void dispose() {
+    nombre.dispose();
+    descripcion.dispose();
+    super.dispose();
+  }
+
+  Future<void> pickImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+    if (pickedFile != null) {
+      setState(() {
+        image = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<String?> _uploadImage(File image) async {
+    try {
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('product_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      final uploadTask = storageRef.putFile(image);
+      final snapshot = await uploadTask.whenComplete(() => {});
+      final downloadTask = await snapshot.ref.getDownloadURL();
+      return downloadTask;
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error uploading image: $e');
+      return null;
+    }
+  }
+
+  void nuevoProducto() async {
+    if (formKey.currentState!.validate()) {
+      try {
+        String? imageUrl;
+        if (image != null) {
+          imageUrl = await _uploadImage(image!);
+        }
+        await firebase.collection('producto').add({
+          'nombreProducto': nombre.text,
+          'descripcionProducto': descripcion.text,
+          'imageUrl': imageUrl,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Producto agregado exitosamente')));
+
+        nombre.clear();
+        descripcion.clear();
+        setState(() {
+          image = null;
+        });
+
+        Navigator.push(
+            // ignore: use_build_context_synchronously
+            context,
+            MaterialPageRoute(
+              builder: (context) => const productosMenu(),
+            ));
+      } catch (e) {
+        // ignore: avoid_print
+        print('Error adding product: $e');
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Error al agregar el producto')));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,45 +110,54 @@ class productoNewPage extends State<productoNew> {
           body: Center(
             child: SingleChildScrollView(
               child: Form(
+                key: formKey,
                 child: Column(
                   children: <Widget>[
-                    // ignore: unnecessary_null_comparison
-                    image != null
-                        ? Image.file(image!)
-                        : const Text('No hay imagen seleccionada'),
-                    const SizedBox(height: 20),
+                    Container(
+                        margin: const EdgeInsets.all(10),
+                        height: 200,
+                        width: 200,
+                        decoration: BoxDecoration(
+                            color: Colors.yellow[200],
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 10,
+                                offset: Offset(0, 5),
+                              ),
+                            ],
+                            border: Border.all(
+                              color: Colors.yellow,
+                              width: 2,
+                            )),
+                        child: image != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.file(
+                                  image!,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : const Icon(
+                                Icons.image,
+                                size: 100,
+                                color: Colors.black,
+                              )),
+                    const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         ElevatedButton(
-                          child: const Text('Tomar foto'),
-                          onPressed: () async {
-                            final picker = ImagePicker();
-                            final XFile? pickedFile = await picker.pickImage(
-                                source: ImageSource.camera);
-                            setState(() {
-                              if (pickedFile != null) {
-                                image = File(pickedFile.path);
-                              } else {
-                                image = null;
-                              }
-                            });
-                          },
+                          child: const Text('Camara'),
+                          onPressed: () => pickImage(ImageSource.camera),
+                        ),
+                        const SizedBox(
+                          width: 10,
                         ),
                         ElevatedButton(
-                          child: const Text('Seleccionar desde galería'),
-                          onPressed: () async {
-                            final picker = ImagePicker();
-                            final XFile? pickedFile = await picker.pickImage(
-                                source: ImageSource.gallery);
-                            setState(() {
-                              if (pickedFile != null) {
-                                image = File(pickedFile.path);
-                              } else {
-                                image = null;
-                              }
-                            });
-                          },
+                          child: const Text('Galeria'),
+                          onPressed: () => pickImage(ImageSource.gallery),
                         ),
                       ],
                     ),
@@ -89,7 +172,20 @@ class productoNewPage extends State<productoNew> {
                     const SizedBox(
                       height: 10,
                     ),
-                    const buttonProductoNew(),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromRGBO(255, 243, 13, 1),
+                        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                      ),
+                      onPressed: () async {
+                        nuevoProducto();
+                        // ignore: avoid_print
+                        print('...Enviado');
+                      },
+                      child: const Text('Guardar'),
+                    ),
                   ],
                 ),
               ),
@@ -149,27 +245,6 @@ class descripcionProducto extends StatelessWidget {
           borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
         ),
       ),
-    );
-  }
-}
-
-// ignore: camel_case_types
-class buttonProductoNew extends StatelessWidget {
-  const buttonProductoNew({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromRGBO(255, 243, 13, 1),
-        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      ),
-      onPressed: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const productosMenu()));
-      },
-      child: const Text('Guardar'),
     );
   }
 }
