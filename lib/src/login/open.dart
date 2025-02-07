@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:para_ya/src/Empresa/homeEmpresa.dart';
 import 'package:para_ya/src/Empresa/inicioSeccionEmpresa.dart';
+import 'package:para_ya/src/Empresa/inicioSeccionUsuarioEmpresa.dart';
 import 'package:para_ya/src/autentic/facebook.dart';
 import 'package:para_ya/src/autentic/google.dart';
 import 'package:para_ya/src/usuario/home.dart';
@@ -196,6 +197,30 @@ class botonesIniciarSecciones extends StatelessWidget {
               ),
             )
           ]),
+          const SizedBox(
+            width: 20,
+          ),
+          Column(
+            children: <Widget>[
+              FloatingActionButton(
+                heroTag: 'unique-tag-for-this-fab',
+                backgroundColor: Colors.green,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const inicioSeccionUsuarioEmpresa(),
+                      ));
+                },
+                child: const Icon(
+                  Icons.business,
+                  size: 50,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
