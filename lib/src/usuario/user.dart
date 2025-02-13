@@ -40,7 +40,7 @@ class userPage extends State<user> {
                   child: CircularProgressIndicator(),
                 );
               }
-              if (!snapshot.hasData || snapshot.data!.exists) {
+              if (!snapshot.hasData || !snapshot.data!.exists) {
                 return const Center(
                   child: Text('No hay datos disponibles'),
                 );
