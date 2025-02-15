@@ -20,6 +20,7 @@ class productoNewPage extends State<productoNew> {
   final formKey = GlobalKey<FormState>();
   final nombre = TextEditingController();
   final descripcion = TextEditingController();
+  final precio = TextEditingController();
   File? image;
   final firebase = FirebaseFirestore.instance;
 
@@ -27,6 +28,7 @@ class productoNewPage extends State<productoNew> {
   void dispose() {
     nombre.dispose();
     descripcion.dispose();
+    precio.dispose();
     super.dispose();
   }
 
@@ -65,6 +67,7 @@ class productoNewPage extends State<productoNew> {
         await firebase.collection('producto').add({
           'nombreProducto': nombre.text,
           'descripcionProducto': descripcion.text,
+          'precioProducto': double.parse(precio.text),
           'imageUrl': imageUrl,
           'timestamp': FieldValue.serverTimestamp(),
         });
@@ -172,6 +175,10 @@ class productoNewPage extends State<productoNew> {
                     const SizedBox(
                       height: 10,
                     ),
+                    precioProducto(),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromRGBO(255, 243, 13, 1),
@@ -245,6 +252,42 @@ class descripcionProducto extends StatelessWidget {
           borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
         ),
       ),
+    );
+  }
+}
+
+// ignore: camel_case_types
+class precioProducto extends StatelessWidget {
+  precioProducto({super.key});
+  final precio = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      maxLines: 1,
+      controller: precio,
+      keyboardType: TextInputType.number,
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: 'Precio del producto',
+        labelStyle: TextStyle(color: Color.fromRGBO(1, 1, 1, 1)),
+        filled: true,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Por favor ingrese el precio del producto';
+        }
+        if (double.tryParse(value) == null) {
+          return 'Por favor ingrese un numero valido';
+        }
+        return null;
+      },
     );
   }
 }
