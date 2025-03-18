@@ -235,7 +235,47 @@ class olvideContrasena extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: TextButton(
-        onPressed: () {},
+        onPressed: () async {
+          final emailController = TextEditingController();
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: const Text('Restablecer Contraseña.'),
+                    content: TextField(
+                      controller: emailController,
+                      decoration: const InputDecoration(
+                        hintText: 'Introduce tu correo electronico',
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () async {
+                          final email = emailController.text;
+                          if (email.isNotEmpty) {
+                            try {
+                              await FirebaseAuth.instance
+                                  .sendPasswordResetEmail(email: email);
+                              // ignore: use_build_context_synchronously
+                              Navigator.of(context).pop();
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Correo de restablecimiento enviado.')));
+                            } catch (e) {
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text('Error: ${e.toString()}')),
+                              );
+                            }
+                          }
+                        },
+                        child: const Text('Enviar'),
+                      ),
+                    ],
+                  ));
+        },
         child: const Text(
           'Olvide la contraseña',
           style: TextStyle(fontSize: 20, color: Colors.black),
