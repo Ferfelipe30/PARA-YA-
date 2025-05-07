@@ -60,13 +60,23 @@ class homePage extends State<home> {
                               data.containsKey('descripcionProducto')
                                   ? data['descripcionProducto']
                                   : 'Descripción no disponible';
-                          final imagenUrl = data.containsKey('imagenUrl')
-                              ? data['imagenUrl']
+                          final imagenUrl = data.containsKey('imageUrl')
+                              ? data['imageUrl']
                               : 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.123rf.com%2Fphoto_104615274_stock-vector-no-image-available-icon-flat-vector.html&psig=AOvVaw3';
 
                           return ListTile(
                             leading: CircleAvatar(
-                              backgroundImage: NetworkImage(imagenUrl),
+                              backgroundImage: data.containsKey(imagenUrl) &&
+                                      data[imagenUrl] != null &&
+                                      data[imagenUrl].isNotEmpty
+                                  ? NetworkImage(data[imagenUrl])
+                                  : null,
+                              child: data.containsKey(imagenUrl) &&
+                                      data[imagenUrl] != null &&
+                                      data[imagenUrl].isNotEmpty
+                                  ? null
+                                  : const Icon(Icons.image_not_supported,
+                                      size: 30),
                             ),
                             title: Text(nombre),
                             subtitle: Text(descripcion),
