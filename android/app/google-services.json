@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "643480023034",
+    "firebase_url": "https://para-ya-28de5-default-rtdb.firebaseio.com",
     "project_id": "para-ya-28de5",
     "storage_bucket": "para-ya-28de5.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.para_ya"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "643480023034-1hmgp30p371pkskr2389gots4tuvvp5v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.para_ya",
+            "certificate_hash": "ee0a0b76ae775c824e1b5d9d7b8b4bb0d526ccf6"
+          }
+        },
+        {
+          "client_id": "643480023034-tngbcri722q7qmitoq7775k6hbdpv7rn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAViWStz5M4OkJ1ogJrYjJYqFD9cqDlCEI"
@@ -20,7 +34,55 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643480023034-k9hhlas84pfrv9rpf8valgg4r1ruse5g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "643480023034-c7knh7sef9vlpr1qcighekg62gngl6o8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rapidgoDomicilio"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643480023034:android:95e4048246c4260bc7be43",
+        "android_client_info": {
+          "package_name": "com.example.rapidgo_domicilio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643480023034-tngbcri722q7qmitoq7775k6hbdpv7rn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAViWStz5M4OkJ1ogJrYjJYqFD9cqDlCEI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643480023034-k9hhlas84pfrv9rpf8valgg4r1ruse5g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "643480023034-c7knh7sef9vlpr1qcighekg62gngl6o8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rapidgoDomicilio"
+              }
+            }
+          ]
         }
       }
     }

@@ -8,7 +8,9 @@ class google {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
 
-    GoogleSignIn objGoogle = GoogleSignIn();
+    GoogleSignIn objGoogle = GoogleSignIn(
+      scopes: ['email', 'profile'],
+    );
     GoogleSignInAccount? objGoogleSignInAccount = await objGoogle.signIn();
 
     if (objGoogleSignInAccount != null) {
@@ -24,7 +26,10 @@ class google {
         // ignore: unused_catch_clause
       } on FirebaseAuthException catch (e) {
         // ignore: avoid_print
-        print('Error en la autenticacion de Google');
+        print('Error en la autenticacion de Google: ${e.message}');
+      } on Exception catch (e) {
+        // ignore: avoid_print
+        print('Error general: ${e.toString()}');
       }
     }
     return null;

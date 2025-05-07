@@ -1,0 +1,2 @@
+C:/Users/ferju/Documents/PARA-YA-/android/app/.cxx/Debug/b4n6m3h4/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/ferju/Documents/PARA-YA-/android/app/.cxx/Debug/b4n6m3h4/arm64-v8a/CMakeFiles/rebuild_cache.dir
