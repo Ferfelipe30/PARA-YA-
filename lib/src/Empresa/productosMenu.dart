@@ -84,6 +84,49 @@ class productosMenuPage extends State<productosMenu> {
                           ),
                         );
                       },
+                      onLongPress: () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Eliminar producto'),
+                            content: const Text(
+                                '¿Estas seguro de eliminar este producto?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: const Text('Eliminar'),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirm == true) {
+                          try {
+                            await FirebaseFirestore.instance
+                                .collection('producto')
+                                .doc(document.id)
+                                .delete();
+
+                            // ignore: use_build_context_synchronously
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content:
+                                    Text('Producto eliminado exitosamente'),
+                              ),
+                            );
+                          } catch (e) {
+                            // ignore: use_build_context_synchronously
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Error al eliminar producto'),
+                              ),
+                            );
+                          }
+                        }
+                      },
                     ),
                   );
                 }).toList(),
