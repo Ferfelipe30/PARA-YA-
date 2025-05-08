@@ -237,12 +237,14 @@ class olvideContrasena extends StatelessWidget {
       child: TextButton(
         onPressed: () async {
           final emailController = TextEditingController();
+          final scaffoldContext = context;
           showDialog(
               context: context,
               builder: (context) => AlertDialog(
                     title: const Text('Restablecer Contraseña.'),
                     content: TextField(
                       controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
                         hintText: 'Introduce tu correo electronico',
                       ),
@@ -251,24 +253,57 @@ class olvideContrasena extends StatelessWidget {
                       TextButton(
                         onPressed: () async {
                           final email = emailController.text;
-                          if (email.isNotEmpty) {
-                            try {
-                              await FirebaseAuth.instance
-                                  .sendPasswordResetEmail(email: email);
-                              // ignore: use_build_context_synchronously
-                              Navigator.of(context).pop();
-                              // ignore: use_build_context_synchronously
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          'Correo de restablecimiento enviado.')));
-                            } catch (e) {
-                              // ignore: use_build_context_synchronously
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text('Error: ${e.toString()}')),
-                              );
+                          if (email.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'Por favor, introduce un correo electronico.'),
+                              ),
+                            );
+                            return;
+                          }
+                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'Por favor, introduce un correo valido.'),
+                              ),
+                            );
+                            return;
+                          }
+                          try {
+                            await FirebaseAuth.instance
+                                .sendPasswordResetEmail(email: email);
+                            // ignore: use_build_context_synchronously
+                            Navigator.of(context).pop();
+                            // ignore: use_build_context_synchronously
+                            ScaffoldMessenger.of(scaffoldContext).showSnackBar(
+                              const SnackBar(
+                                content:
+                                    Text('Correo de restablecimiento enviado.'),
+                              ),
+                            );
+                          } on FirebaseAuthException catch (e) {
+                            String errorMessage;
+                            if (e.code == 'user-not-found') {
+                              errorMessage =
+                                  'No se encontro un usuario con ese correo.';
+                            } else {
+                              errorMessage = 'Error: ${e.message}';
                             }
+                            // ignore: use_build_context_synchronously
+                            ScaffoldMessenger.of(scaffoldContext).showSnackBar(
+                              SnackBar(content: Text(errorMessage)),
+                            );
+                          } catch (e) {
+                            //ignore: use_build_context_synchronously
+                            ScaffoldMessenger.of(scaffoldContext).showSnackBar(
+                              SnackBar(
+                                content: Text('Error: ${e.toString()}'),
+                              ),
+                            );
+                          } finally {
+                            emailController.clear();
                           }
                         },
                         child: const Text('Enviar'),

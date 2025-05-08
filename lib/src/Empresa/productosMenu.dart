@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:para_ya/src/Empresa/nav.dart';
+import 'package:para_ya/src/Empresa/productoDetalle.dart';
 import 'package:para_ya/src/Empresa/productoNew.dart';
 
 // ignore: camel_case_types
@@ -20,15 +21,15 @@ class productosMenuPage extends State<productosMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Container(
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(197, 255, 255, 255),
+      body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
               image: AssetImage('assets/images/cityfondo.webp'),
               fit: BoxFit.cover),
         ),
         child: Scaffold(
-          backgroundColor: const Color.fromARGB(197, 255, 255, 255),
           drawer: const nav(),
           appBar: AppBar(
             title: const Text('Productos'),
@@ -49,11 +50,40 @@ class productosMenuPage extends State<productosMenu> {
                 children: snapshot.data!.docs.map((document) {
                   return Card(
                     child: ListTile(
-                      leading: document['imageUrl'] != null
+                      leading: (document.data() as Map<String, dynamic>)
+                                  .containsKey('imageUrl') &&
+                              document['imageUrl'] != null
                           ? Image.network(document['imageUrl'])
                           : const Icon(Icons.image),
                       title: Text(document['nombreProducto']),
-                      subtitle: Text(document['descripcionProducto']),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(document['descripcionProducto']),
+                          Text(
+                            (document.data() != null &&
+                                    (document.data() as Map<String, dynamic>)
+                                        .containsKey('precioProducto'))
+                                ? '\$${document['precioProducto']}'
+                                : 'Sin precio',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        final producto =
+                            document.data() as Map<String, dynamic>;
+                        producto['id'] = document.id;
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductoDetalle(
+                              producto: producto,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   );
                 }).toList(),

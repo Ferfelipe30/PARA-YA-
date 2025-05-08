@@ -24,11 +24,13 @@ class productoNuevoEmpresaPage extends State<productoNuevoEmpresa> {
   final descripcionProducto = TextEditingController();
   File? image;
   final firebase = FirebaseFirestore.instance;
+  final precioProducto = TextEditingController();
 
   @override
   void dispose() {
     nombreProducto.dispose();
     descripcionProducto.dispose();
+    precioProducto.dispose();
     super.dispose();
   }
 
@@ -67,6 +69,7 @@ class productoNuevoEmpresaPage extends State<productoNuevoEmpresa> {
         await firebase.collection('producto').add({
           'nombreProducto': nombreProducto.text,
           'descripcionProducto': descripcionProducto.text,
+          'precioProducto': double.parse(precioProducto.text),
           'imageUrl': imageUrl,
           'userID': auth.currentUser!.uid,
           'timestamp': FieldValue.serverTimestamp(),
@@ -79,6 +82,7 @@ class productoNuevoEmpresaPage extends State<productoNuevoEmpresa> {
 
         nombreProducto.clear();
         descripcionProducto.clear();
+        precioProducto.clear();
         setState(() {
           image = null;
         });
@@ -88,11 +92,13 @@ class productoNuevoEmpresaPage extends State<productoNuevoEmpresa> {
             context,
             MaterialPageRoute(builder: (context) => const menuEmpresa()));
       } catch (e) {
-        // ignore: avoid_print
-        print('Error adding product: $e');
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Error al agregar el producto')));
+        if (mounted) {
+          // ignore: avoid_print
+          print('Error adding product: $e');
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Error al agregar el producto')));
+        }
       }
     }
   }
@@ -208,6 +214,37 @@ class productoNuevoEmpresaPage extends State<productoNuevoEmpresa> {
                               BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
                         ),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      maxLines: 1,
+                      controller: precioProducto,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Precio del producto',
+                        labelStyle: TextStyle(
+                          color: Color.fromRGBO(1, 1, 1, 1),
+                        ),
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color.fromRGBO(1, 1, 1, 1)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    const Text(
+                      'Nota: El precioo es por unidad.',
+                      style: TextStyle(fontSize: 12, color: Colors.black),
                     ),
                     const SizedBox(
                       height: 10,
