@@ -1,0 +1,2 @@
+C:/Users/ferju/Documents/PARA-YA-/android/app/.cxx/Debug/4o431l6s/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/ferju/Documents/PARA-YA-/android/app/.cxx/Debug/4o431l6s/armeabi-v7a/CMakeFiles/rebuild_cache.dir

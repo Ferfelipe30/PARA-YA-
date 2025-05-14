@@ -2,27 +2,71 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:para_ya/src/usuario/navDrawer.dart';
 
-class Carrito extends StatelessWidget {
+class Carrito extends StatefulWidget {
   final List<Map<String, dynamic>> carrito;
 
   const Carrito({super.key, required this.carrito});
 
+  @override
+  State<Carrito> createState() => _CarritoState();
+}
+
+class _CarritoState extends State<Carrito> {
+  String? _selectedPaymentMethod;
+  final List<String> _paymentMethods = [
+    'Tarjeta de Crédito/Débito (Simulado)',
+    'PSE (Simulado)',
+    'Efectivo Contraentrega'
+  ]; // Ejemplo de métodos de pago
+
   double calcularTotal() {
-    return carrito.fold(0, (total, producto) {
+    return widget.carrito.fold(0, (total, producto) {
       return total + (producto['precioProducto'] ?? 0);
     });
   }
 
   Future<void> realizarCompra(BuildContext context) async {
     try {
+      if (_selectedPaymentMethod == null || _selectedPaymentMethod!.isEmpty) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Por favor, seleccione un método de pago.')),
+        );
+        return;
+      }
+
+      // PASO CRÍTICO: Integración con Pasarela de Pagos
+      // Aquí es donde integrarías tu pasarela de pagos (Stripe, PayPal, Mercado Pago, etc.)
+      // NUNCA manejes datos sensibles de tarjetas directamente.
+      // La pasarela se encargará de la transacción segura.
+      // Ejemplo conceptual (debes reemplazar esto con la lógica real de tu pasarela):
+      // ignore: avoid_print
+      print('Iniciando proceso de pago con: $_selectedPaymentMethod');
+      // bool pagoExitoso = await miPasarelaDePagos.procesar(calcularTotal(), _selectedPaymentMethod, /* datos del usuario */);
+      // Por ahora, simularemos un pago exitoso después de un breve retraso.
+      await Future.delayed(const Duration(seconds: 2));
+      bool pagoExitoso = true; // Simulación de pago exitoso
+
+      // ignore: dead_code
+      if (!pagoExitoso) {
+        if (!mounted) return;
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error al procesar el pago. Intente de nuevo.')),
+        );
+        return;
+      }
+
+      // Si el pago fue exitoso, continuar con la creación del pedido
       final firestore = FirebaseFirestore.instance;
 
       //crear el pedido
       final pedido = {
-        'productos': carrito,
+        'productos': widget.carrito,
         'total': calcularTotal(),
         'fecha': DateTime.now(),
         'estado': 'Pendiente',
+        'metodoDePago': _selectedPaymentMethod, // Guardar método de pago
       };
 
       //Guardar el pedido en Firestore
@@ -37,17 +81,20 @@ class Carrito extends StatelessWidget {
         'Hay un nuevo pedido para entregar.',
       );
 
-      //Mostrar alertas
+      if (!mounted) return;
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Pedido enviado a la empresa y al domiciliario.'),
+          content: Text('¡Compra realizada con éxito! Pedido enviado.'),
         ),
       );
 
-      carrito.clear();
-      (context as Element).markNeedsBuild();
+      setState(() {
+        widget.carrito.clear();
+        _selectedPaymentMethod = null; // Resetear método de pago
+      });
     } catch (e) {
+      if (!mounted) return;
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al enviar el pedido: $e')),
@@ -82,7 +129,7 @@ class Carrito extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        child: carrito.isEmpty
+        child: widget.carrito.isEmpty
             ? const Center(
                 child: Text('El carrito esta vacio.'),
               )
@@ -90,9 +137,9 @@ class Carrito extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ListView.builder(
-                        itemCount: carrito.length,
+                        itemCount: widget.carrito.length,
                         itemBuilder: (context, index) {
-                          final producto = carrito[index];
+                          final producto = widget.carrito[index];
                           return ListTile(
                             leading: producto.containsKey('imageUrl') &&
                                     producto['imageUrl'] != null
@@ -114,16 +161,18 @@ class Carrito extends StatelessWidget {
                                       actions: [
                                         TextButton(
                                           onPressed: () {
-                                            Navigator.of(context).pop();
+                                            if (mounted) Navigator.of(context).pop();
                                           },
                                           child: const Text('Cancelar'),
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            carrito.removeAt(index);
-                                            Navigator.of(context).pop();
-                                            (context as Element)
-                                                .markNeedsBuild();
+                                            setState(() {
+                                              widget.carrito.removeAt(index);
+                                            });
+                                            if (mounted) {
+                                               Navigator.of(context).pop();
+                                            }
                                           },
                                           child: const Text('Eliminar'),
                                         ),
@@ -136,36 +185,68 @@ class Carrito extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    child: Column(
                       children: [
-                        Text(
-                          'Total: \$${calcularTotal().toStringAsFixed(2)}',
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            if (carrito.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      'El carrito esta Vacio. No se puede realizar la compra.'),
-                                ),
-                              );
-                              return;
-                            }
-
-                            //Logica para enviar alertas
-                            await realizarCompra(context);
+                        DropdownButtonFormField<String>(
+                          decoration: const InputDecoration(
+                            labelText: 'Seleccione Método de Pago',
+                            border: OutlineInputBorder(),
+                          ),
+                          value: _selectedPaymentMethod,
+                          hint: const Text('Elija cómo pagar'),
+                          isExpanded: true,
+                          items: _paymentMethods.map((String method) {
+                            return DropdownMenuItem<String>(
+                              value: method,
+                              child: Text(method),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _selectedPaymentMethod = newValue;
+                            });
                           },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              foregroundColor: Colors.white),
-                          child: const Text('Comprar'),
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Total: \$${calcularTotal().toStringAsFixed(2)}',
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                if (widget.carrito.isEmpty) {
+                                  if (!mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'El carrito está vacío. No se puede realizar la compra.'),
+                                    ),
+                                  );
+                                  return;
+                                }
+                                if (_selectedPaymentMethod == null) {
+                                  if (!mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Por favor, seleccione un método de pago.'),
+                                    ),
+                                  );
+                                  return;
+                                }
+                                await realizarCompra(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12)
+                              ),
+                              child: const Text('Comprar Ahora'),
+                            ),
+                          ],
                         ),
                       ],
                     ),
