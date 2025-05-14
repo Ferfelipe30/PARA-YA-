@@ -74,7 +74,7 @@ class imagenLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Image.asset(
-        'assets/images/logo.webp',
+        'assets/images/logo_rapidgo.webp',
         fit: BoxFit.contain,
       ),
     );

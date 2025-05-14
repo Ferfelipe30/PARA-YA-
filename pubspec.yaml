@@ -39,4 +39,4 @@ flutter:
   uses-material-design: true
   assets: 
     - assets/images/cityfondo.webp
-    - assets/images/logo.webp
+    - assets/images/logo_rapidgo.webp
